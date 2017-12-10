@@ -1,8 +1,8 @@
 //
 //  GameViewController.swift
-//  colorV2
+//  test
 //
-//  Created by Kairi Malcolm Sameshima on 12/8/17.
+//  Created by Kairi Malcolm Sameshima on 12/10/17.
 //  Copyright © 2017 nyu.edu. All rights reserved.
 //
 
@@ -23,8 +23,8 @@ class GameViewController: UIViewController {
             if let sceneNode = scene.rootNode as! GameScene? {
                 
                 // Copy gameplay related content over to the scene
-//                sceneNode.entities = scene.entities
-//                sceneNode.graphs = scene.graphs
+                sceneNode.entities = scene.entities
+                sceneNode.graphs = scene.graphs
                 
                 // Set the scale mode to scale to fit the window
                 sceneNode.scaleMode = .aspectFill

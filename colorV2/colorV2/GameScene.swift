@@ -61,8 +61,12 @@ class GameScene: SKScene {
     
         
     }
+
     override func didMove(to view: SKView) {
-        
+//        background.size = self.frame.size
+//        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+//        background.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+//        self.addChild(background)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

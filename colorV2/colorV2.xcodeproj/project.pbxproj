@@ -19,8 +19,8 @@
 		F890F6B61FDB43DF006C8B94 /* colorV2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F890F6B51FDB43DF006C8B94 /* colorV2UITests.swift */; };
 		F890F6C41FDB4E60006C8B94 /* Chameleon.sks in Resources */ = {isa = PBXBuildFile; fileRef = F890F6C31FDB4E60006C8B94 /* Chameleon.sks */; };
 		F890F6C61FDB51B8006C8B94 /* MyActions.sks in Resources */ = {isa = PBXBuildFile; fileRef = F890F6C51FDB51B8006C8B94 /* MyActions.sks */; };
-		F890F6C81FDB542A006C8B94 /* MyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F890F6C71FDB542A006C8B94 /* MyScene.sks */; };
 		F890F6CA1FDB5450006C8B94 /* Tongue.sks in Resources */ = {isa = PBXBuildFile; fileRef = F890F6C91FDB5450006C8B94 /* Tongue.sks */; };
+		F8EBDADA1FDDCC5B00C3E937 /* Trees.sks in Resources */ = {isa = PBXBuildFile; fileRef = F8EBDAD91FDDCC5B00C3E937 /* Trees.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +59,8 @@
 		F890F6B71FDB43DF006C8B94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F890F6C31FDB4E60006C8B94 /* Chameleon.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Chameleon.sks; sourceTree = "<group>"; };
 		F890F6C51FDB51B8006C8B94 /* MyActions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyActions.sks; sourceTree = "<group>"; };
-		F890F6C71FDB542A006C8B94 /* MyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyScene.sks; sourceTree = "<group>"; };
 		F890F6C91FDB5450006C8B94 /* Tongue.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Tongue.sks; sourceTree = "<group>"; };
+		F8EBDAD91FDDCC5B00C3E937 /* Trees.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Trees.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,12 +113,12 @@
 			isa = PBXGroup;
 			children = (
 				F890F68F1FDB43DF006C8B94 /* AppDelegate.swift */,
-				F890F6911FDB43DF006C8B94 /* GameScene.sks */,
 				F890F6931FDB43DF006C8B94 /* Actions.sks */,
-				F890F6951FDB43DF006C8B94 /* GameScene.swift */,
-				F890F6C31FDB4E60006C8B94 /* Chameleon.sks */,
-				F890F6C71FDB542A006C8B94 /* MyScene.sks */,
 				F890F6C91FDB5450006C8B94 /* Tongue.sks */,
+				F890F6C31FDB4E60006C8B94 /* Chameleon.sks */,
+				F8EBDAD91FDDCC5B00C3E937 /* Trees.sks */,
+				F890F6911FDB43DF006C8B94 /* GameScene.sks */,
+				F890F6951FDB43DF006C8B94 /* GameScene.swift */,
 				F890F6971FDB43DF006C8B94 /* GameViewController.swift */,
 				F890F6991FDB43DF006C8B94 /* Main.storyboard */,
 				F890F69C1FDB43DF006C8B94 /* Assets.xcassets */,
@@ -260,7 +260,7 @@
 				F890F69D1FDB43DF006C8B94 /* Assets.xcassets in Resources */,
 				F890F6CA1FDB5450006C8B94 /* Tongue.sks in Resources */,
 				F890F6A01FDB43DF006C8B94 /* LaunchScreen.storyboard in Resources */,
-				F890F6C81FDB542A006C8B94 /* MyScene.sks in Resources */,
+				F8EBDADA1FDDCC5B00C3E937 /* Trees.sks in Resources */,
 				F890F6941FDB43DF006C8B94 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
