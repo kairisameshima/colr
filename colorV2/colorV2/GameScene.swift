@@ -14,9 +14,13 @@ import UIKit
 class GameScene: SKScene {
     
     //chameleon node
-    var Chameleon = SKSpriteNode(fileNamed: "Chameleon.sks")
+    let Chameleon_body = SKSpriteNode(imageNamed: "Chameleon_noHead.png")
+    let Chameleon_Head = SKSpriteNode(imageNamed: "ChameleonHead.png")
     let redFruit = SKSpriteNode(imageNamed: "redFruit.png")
-    
+    let greenFruit = SKSpriteNode(imageNamed: "greenFruit.png")
+    let blueFruit = SKSpriteNode(imageNamed: "blueFruit.png")
+
+    let fernBase = SKSpriteNode(imageNamed: "fern.png")
     
     //color variables
     var RED = CGFloat.init()
@@ -32,34 +36,34 @@ class GameScene: SKScene {
         //Things to do in the intialize FOR NOW with simplified game,
         
 //        //initialize could also double as a reset in which case
-//        RED = CGFloat.init()
-//        BLUE = CGFloat.init()
-//        GREEN = CGFloat.init()
-//
-//        //Generate a random color that works within a certain interval, in this case 8
-//        var BASE_R = Int(arc4random_uniform(256))
-//        var BASE_G = Int(arc4random_uniform(256))
-//        var BASE_B = Int(arc4random_uniform(256))
-//
-//        if BASE_R % interval != 0{
-//            BASE_R = BASE_R + (BASE_R % interval)
-//        }
-//        if BASE_G % interval != 0{
-//            BASE_G = BASE_G + (BASE_G % interval)
-//        }
-//        if BASE_B % interval != 0{
-//            BASE_B = BASE_B + (BASE_B % interval)
-//        }
-//
-//        //set BASE_COLR based on the interval
-//        BASE_COLOR = UIColor.init(red: CGFloat(BASE_R), green: CGFloat(BASE_G), blue: CGFloat(BASE_B), alpha:1)
-//
-//        //initialize whatever chameleon is sitting on to base color
-//
-//        //initialize chameleon to black
-//        Chameleon?.color = UIColor.init(red:0.0, green:0.0, blue:0.0, alpha:1)
-//        Chameleon?.colorBlendFactor = 1.0
-//
+        RED = CGFloat.init()
+        BLUE = CGFloat.init()
+        GREEN = CGFloat.init()
+
+        //Generate a random color that works within a certain interval, in this case 8
+        var BASE_R = Int(arc4random_uniform(256))
+        var BASE_G = Int(arc4random_uniform(256))
+        var BASE_B = Int(arc4random_uniform(256))
+
+        if BASE_R % interval != 0{
+            BASE_R = BASE_R + (BASE_R % interval)
+        }
+        if BASE_G % interval != 0{
+            BASE_G = BASE_G + (BASE_G % interval)
+        }
+        if BASE_B % interval != 0{
+            BASE_B = BASE_B + (BASE_B % interval)
+        }
+
+        //set BASE_COLR based on the interval
+        BASE_COLOR = UIColor.init(red: CGFloat(BASE_R), green: CGFloat(BASE_G), blue: CGFloat(BASE_B), alpha:1)
+
+        //initialize whatever chameleon is sitting on to base color
+
+        //initialize chameleon to black
+        Chameleon_body.color = UIColor.init(red:0.0, green:0.0, blue:0.0, alpha:1)
+        Chameleon_body.colorBlendFactor = 1.0
+
         
     }
     
