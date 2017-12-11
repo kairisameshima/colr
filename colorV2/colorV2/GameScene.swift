@@ -14,7 +14,14 @@ import UIKit
 class GameScene: SKScene {
     
     //chameleon node
-    var Chameleon = SKSpriteNode(fileNamed: "Chameleon.sks")
+
+    let Chameleon_body = SKSpriteNode(imageNamed: "Chameleon_noHead.png")
+    let Chameleon_Head = SKSpriteNode(imageNamed: "ChameleonHead.png")
+    let redFruit = SKSpriteNode(imageNamed: "redFruit.png")
+    let greenFruit = SKSpriteNode(imageNamed: "greenFruit.png")
+    let blueFruit = SKSpriteNode(imageNamed: "blueFruit.png")
+
+    let fernBase = SKSpriteNode(imageNamed: "fern_base.png")
 
     
     //color variables
@@ -29,38 +36,36 @@ class GameScene: SKScene {
         //Things to do in the intialize FOR NOW with simplified game,
         
 //        //initialize could also double as a reset in which case
-//        RED = CGFloat.init()
-//        BLUE = CGFloat.init()
-//        GREEN = CGFloat.init()
-//
-//        //Generate a random color that works within a certain interval, in this case 8
-//        var BASE_R = Int(arc4random_uniform(256))
-//        var BASE_G = Int(arc4random_uniform(256))
-//        var BASE_B = Int(arc4random_uniform(256))
-//
-//        if BASE_R % interval != 0{
-//            BASE_R = BASE_R + (BASE_R % interval)
-//        }
-//        if BASE_G % interval != 0{
-//            BASE_G = BASE_G + (BASE_G % interval)
-//        }
-//        if BASE_B % interval != 0{
-//            BASE_B = BASE_B + (BASE_B % interval)
-//        }
-//
-//        //set BASE_COLR based on the interval
-//        BASE_COLOR = UIColor.init(red: CGFloat(BASE_R), green: CGFloat(BASE_G), blue: CGFloat(BASE_B), alpha:1)
-//
-//        //initialize whatever chameleon is sitting on to base color
-//
-//        //initialize chameleon to black
-//        Chameleon?.color = UIColor.init(red:0.0, green:0.0, blue:0.0, alpha:1)
-//        Chameleon?.colorBlendFactor = 1.0
-//
+        RED = CGFloat.init()
+        BLUE = CGFloat.init()
+        GREEN = CGFloat.init()
+
+        //Generate a random color that works within a certain interval, in this case 8
+
+        //initialize whatever chameleon is sitting on to base color
+
+        //initialize chameleon to black
+        Chameleon_body.color = UIColor.init(red:0.0, green:0.0, blue:0.0, alpha:1)
+        Chameleon_body.colorBlendFactor = 1.0
+
         
     }
     
-    override func didMove(to view: SKView) {
+    override func didMove(to view: SKView) {        
+        let BASE_R = CGFloat(getColrValue())
+        let BASE_G = CGFloat(getColrValue())
+        let BASE_B = CGFloat(getColrValue())
+        
+        let BASE_COLOR = UIColor.init(red: BASE_R/255.0, green: BASE_G/255.0, blue: BASE_B/255.0, alpha: 1.0)
+        fernBase.color = BASE_COLOR
+//        fernBase.color = .purple
+        fernBase.colorBlendFactor = 1.0
+        addChild(fernBase)
+
+//        background.size = self.frame.size
+//        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+//        background.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+//        self.addChild(background)
 
     }
     
@@ -77,10 +82,6 @@ class GameScene: SKScene {
 //        if BLUE < 256{
 //            BLUE += 8
 //        }
-//
-//        //update the chameleon color
-//        Chameleon?.color = UIColor.init(red:CGFloat(RED), green:CGFloat(GREEN), blue:CGFloat(BLUE), alpha:1)
-//        Chameleon?.colorBlendFactor = 1.0
 //
 //        //Shedding would be similar based on the color, check if the color is greater than 0 and if it is subtract then update chameleon color
 //        if RED > 0{
@@ -99,6 +100,15 @@ class GameScene: SKScene {
         
 
     }
-    
+    func getColrValue() -> Int{
+        var BASE = Int(arc4random_uniform(255))
+        if BASE % 8 != 0{
+            BASE = BASE + (BASE % 8)
+            if(BASE > 255){
+                BASE = 255
+            }
+        }
+        return BASE;
+    }
 
 }
