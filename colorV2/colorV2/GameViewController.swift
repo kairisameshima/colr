@@ -23,8 +23,8 @@ class GameViewController: UIViewController {
             if let sceneNode = scene.rootNode as! GameScene? {
                 
                 // Copy gameplay related content over to the scene
-//                sceneNode.entities = scene.entities
-//                sceneNode.graphs = scene.graphs
+                // sceneNode.entities = scene.entities
+                // sceneNode.graphs = scene.graphs
                 
                 // Set the scale mode to scale to fit the window
                 sceneNode.scaleMode = .aspectFill
@@ -32,7 +32,7 @@ class GameViewController: UIViewController {
                 // Present the scene
                 if let view = self.view as! SKView? {
                     view.presentScene(sceneNode)
-                    
+                    view.isPaused = false
                     view.ignoresSiblingOrder = true
                     
                     view.showsFPS = true

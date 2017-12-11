@@ -15,16 +15,13 @@ class GameScene: SKScene {
     
     //chameleon node
     var Chameleon = SKSpriteNode(fileNamed: "Chameleon.sks")
-    let redFruit = SKSpriteNode(imageNamed: "redFruit.png")
-    
+
     
     //color variables
     var RED = CGFloat.init()
     var BLUE = CGFloat.init()
     var GREEN = CGFloat.init()
     var BASE_COLOR = UIColor.clear
-    
-    
     
     var interval = 8
 
@@ -63,22 +60,11 @@ class GameScene: SKScene {
         
     }
     
-    func moveFruit(){
-        redFruit.run(SKAction.rotate(byAngle: 180.0, duration: 10))
-    }
-
-
-    
     override func didMove(to view: SKView) {
-//        background.size = self.frame.size
-//        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
-//        background.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-//        self.addChild(background)
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        moveFruit()
-
         //I don't know if this is the exact place you'd do it but
         
 //        //if you register a hit on red, blue, green etc... you'd use one of the corresponding
@@ -110,6 +96,8 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         
+        
+
     }
     
 
