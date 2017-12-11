@@ -20,7 +20,7 @@ class GameScene: SKScene {
     let greenFruit = SKSpriteNode(imageNamed: "greenFruit.png")
     let blueFruit = SKSpriteNode(imageNamed: "blueFruit.png")
 
-    let fernBase = SKSpriteNode(imageNamed: "fern.png")
+    let fernBase = SKSpriteNode(imageNamed: "fern_base.png")
     
     //color variables
     var RED = CGFloat.init()
@@ -41,22 +41,6 @@ class GameScene: SKScene {
         GREEN = CGFloat.init()
 
         //Generate a random color that works within a certain interval, in this case 8
-        var BASE_R = Int(arc4random_uniform(256))
-        var BASE_G = Int(arc4random_uniform(256))
-        var BASE_B = Int(arc4random_uniform(256))
-
-        if BASE_R % interval != 0{
-            BASE_R = BASE_R + (BASE_R % interval)
-        }
-        if BASE_G % interval != 0{
-            BASE_G = BASE_G + (BASE_G % interval)
-        }
-        if BASE_B % interval != 0{
-            BASE_B = BASE_B + (BASE_B % interval)
-        }
-
-        //set BASE_COLR based on the interval
-        BASE_COLOR = UIColor.init(red: CGFloat(BASE_R), green: CGFloat(BASE_G), blue: CGFloat(BASE_B), alpha:1)
 
         //initialize whatever chameleon is sitting on to base color
 
@@ -74,6 +58,17 @@ class GameScene: SKScene {
 
     
     override func didMove(to view: SKView) {
+        
+        let BASE_R = Int32(arc4random_uniform(256))
+        let BASE_G = Int32(arc4random_uniform(256))
+        let BASE_B = Int32(arc4random_uniform(256))
+
+        fernBase.color = UIColor.init(red:14, green:0.0, blue:33
+            , alpha: 1)
+//        fernBase.color = .purple
+        fernBase.colorBlendFactor = 1.0
+        addChild(fernBase)
+
 //        background.size = self.frame.size
 //        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
 //        background.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
@@ -115,6 +110,12 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         
     }
-    
+    func getColrValue() -> Int{
+        var BASE = Int(arc4random_uniform(256))
+        if BASE % 8 != 0{
+            BASE = BASE + (BASE % 8)
+        }
+        return BASE;
+    }
 
 }
