@@ -51,7 +51,7 @@ class GameScene: SKScene {
         
     }
     
-    override func didMove(to view: SKView) {        
+    override func didMove(to view: SKView) {
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
         let BASE_B = CGFloat(getColrValue())
