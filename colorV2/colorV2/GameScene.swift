@@ -24,6 +24,25 @@ class GameScene: SKScene {
     var BASE_COLOR = UIColor.clear
     var currentColor = UIColor.clear
     
+    //toungue stuff
+    var touchedDrag = false
+    var dragSpace: SKSpriteNode!
+    var initialLoc = CGPoint(x: 0.0 , y:0.0)
+    var endLoc = CGPoint(x: 0.0 , y:0.0)
+    var retracting = false
+    var tongue: SKSpriteNode!
+    var desiredLength = CGFloat(0.0)
+    var desiredAngle = CGFloat(0.0)
+    var actualLength = CGFloat(0.0)
+    var goodBlueAngle = CGFloat(0.0)
+    var goodBlueLength = CGFloat(0.0)
+    var goodRedLength = CGFloat(0.0)
+    var goodGreenLength = CGFloat(0.0)
+    var goodRedAngle = CGFloat(0.0)
+    var goodGreenAngle = CGFloat(0.0)
+
+    
+    
     var fernBase: SKSpriteNode!
     var fernBase2: SKSpriteNode!
     
@@ -41,6 +60,7 @@ class GameScene: SKScene {
         fernBase2 = childNode(withName: "ferns_2") as! SKSpriteNode
 
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
+        let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
 
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
@@ -54,6 +74,22 @@ class GameScene: SKScene {
         fernBase2.colorBlendFactor = 1.0
         
         steve.setScale(0.5)
+        
+        goodBlueAngle = CGFloat(atan((450+418)/(268+248))*M_PI/180.0)
+        
+        var gbl_sub = sqrt((922*922)+(516*516))
+        goodBlueLength = CGFloat(gbl_sub)
+        
+        goodGreenAngle = CGFloat(atan((425+418)/(-151+248))*M_PI/180.0)
+        
+        var ggl_sub = sqrt(898*898+399*399)
+        goodGreenLength = CGFloat(ggl_sub)
+        
+        goodRedAngle = CGFloat(atan((300+418)/(51+248))*M_PI/180.0)
+        
+        var grl_sub = sqrt(718*718+299*299)
+        goodRedLength = CGFloat(grl_sub)
+
     }
     
 
@@ -65,6 +101,11 @@ class GameScene: SKScene {
             let touchedNode = self.atPoint(positionInScene)
 
             if(touchedNode.name != nil){
+                if touchedNode.name == "dragSpace"{
+                    initialLoc = touch.location(in: self)
+                    touchedDrag = true
+                    retracting = false
+                }
                 if touchedNode.name == "red" {
                     RED += interval
                 }
@@ -95,10 +136,64 @@ class GameScene: SKScene {
             }
         }
     }
-    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?){
+        for touch in touches{
+            if(touchedDrag){
+                print("help")
+                endLoc = touch.location(in: self)
+                touchedDrag = false
+                if(endLoc.y < initialLoc.y){
+                    calculateTongue(startPoint: initialLoc, endPoint: endLoc)
+                }
+            }
+        }
+    }
     override func update(_ currentTime: TimeInterval) {
+        changeTongueLength()
         changeSteveColor()
         displayScore()
+    }
+    func calculateTongue(startPoint: CGPoint, endPoint: CGPoint){
+        var diffX = startPoint.x - endPoint.x
+        var diffY = startPoint.y - endPoint.y
+        var hypot = sqrt(diffX*diffX+diffY*diffY)
+        desiredAngle = atan(diffY/diffX)
+        desiredLength = 2.5*hypot
+        tongue.zRotation = (desiredAngle * CGFloat(M_PI))/180.0
+    }
+    func changeTongueLength(){
+        let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
+        if(actualLength<desiredAngle && !retracting){
+            actualLength+=5
+            tongue.size.height = actualLength
+        }
+        else if(actualLength>desiredAngle){//reached max length
+            retracting = true
+            if(abs(desiredAngle-goodRedAngle)<0.17){
+                if(abs(desiredLength-goodRedLength)<50){
+                    RED+=interval
+                }
+            }
+            else if(abs(desiredAngle-goodBlueAngle)<0.17){
+                if(abs(desiredLength-goodBlueLength)<50){
+                    BLUE+=interval
+                }
+            }
+            else if(abs(desiredAngle-goodGreenAngle)<0.17){
+                if(abs(desiredLength-goodGreenLength)<50){
+                    GREEN+=interval
+                }
+            }
+        }
+        else if(actualLength<desiredLength && retracting){
+            actualLength-=5
+            tongue.size.height = actualLength
+        }
+        else if(actualLength<5){
+            actualLength = 0
+            tongue.size.height = actualLength
+            retracting = false
+        }
     }
     
     func changeSteveColor() {
