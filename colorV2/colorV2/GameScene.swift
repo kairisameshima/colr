@@ -14,15 +14,8 @@ import UIKit
 class GameScene: SKScene {
     
     //chameleon node
-
-    let Chameleon_body = SKSpriteNode(imageNamed: "Chameleon_noHead.png")
-    let Chameleon_Head = SKSpriteNode(imageNamed: "ChameleonHead.png")
-    let redFruit = SKSpriteNode(imageNamed: "redFruit.png")
-    let greenFruit = SKSpriteNode(imageNamed: "greenFruit.png")
-    let blueFruit = SKSpriteNode(imageNamed: "blueFruit.png")
-
-    let fernBase = SKSpriteNode(imageNamed: "fern_base.png")
-
+    //let theBlueOne: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
+    
     
     //color variables
     var RED = CGFloat.init()
@@ -45,22 +38,30 @@ class GameScene: SKScene {
         //initialize whatever chameleon is sitting on to base color
 
         //initialize chameleon to black
-        Chameleon_body.color = UIColor.init(red:0.0, green:0.0, blue:0.0, alpha:1)
-        Chameleon_body.colorBlendFactor = 1.0
 
         
     }
     
     override func didMove(to view: SKView) {
+        let fernBase: SKSpriteNode = childNode(withName: "ferns") as! SKSpriteNode
+        let fernBase2: SKSpriteNode = childNode(withName: "ferns_2") as! SKSpriteNode
+
+        let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
+
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
         let BASE_B = CGFloat(getColrValue())
         
         let BASE_COLOR = UIColor.init(red: BASE_R/255.0, green: BASE_G/255.0, blue: BASE_B/255.0, alpha: 1.0)
+        
+
+        
         fernBase.color = BASE_COLOR
-//        fernBase.color = .purple
         fernBase.colorBlendFactor = 1.0
-        addChild(fernBase)
+        fernBase2.color = BASE_COLOR
+        fernBase2.colorBlendFactor = 1.0
+
+        steve.setScale(0.5);
 
 //        background.size = self.frame.size
 //        background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
@@ -72,6 +73,20 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //I don't know if this is the exact place you'd do it but
         
+//        let fernBase: SKSpriteNode = childNode(withName: "ferns") as! SKSpriteNode
+//        let fernBase2: SKSpriteNode = childNode(withName: "ferns_2") as! SKSpriteNode
+
+        let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
+
+        let redFruit: SKSpriteNode = childNode(withName: "red") as! SKSpriteNode
+        let greenFruit: SKSpriteNode = childNode(withName: "green") as! SKSpriteNode
+        let blueFruit: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
+
+        redFruit.isUserInteractionEnabled = false;
+        greenFruit.isUserInteractionEnabled = false;
+        blueFruit.isUserInteractionEnabled = false;
+
+        //this is where we add the clicks for
 //        //if you register a hit on red, blue, green etc... you'd use one of the corresponding
 //        if RED < 256{
 //            RED += 8

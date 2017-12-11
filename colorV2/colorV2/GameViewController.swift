@@ -24,11 +24,11 @@ class GameViewController: UIViewController {
         scene?.scaleMode = .aspectFill
         skView.presentScene(scene)
 
-//        if let scene = GKScene(fileNamed: "GameScene") {
+        if let scene = GKScene(fileNamed: "GameScene") {
         
             
             // Get the SKScene from the loaded GKScene
-<<<<<<< HEAD
+
             if let sceneNode = scene.rootNode as! GameScene? {
                 
                 // Copy gameplay related content over to the scene
@@ -49,28 +49,7 @@ class GameViewController: UIViewController {
                 }
             }
         }
-=======
-//            if let sceneNode = scene.rootNode as! GameScene? {
-//
-//                // Copy gameplay related content over to the scene
-////                sceneNode.entities = scene.entities
-////                sceneNode.graphs = scene.graphs
-//
-//                // Set the scale mode to scale to fit the window
-//                sceneNode.scaleMode = .aspectFill
-//
-//                // Present the scene
-//                if let view = self.view as! SKView? {
-//                    view.presentScene(sceneNode)
-//
-//                    view.ignoresSiblingOrder = true
-//
-//                    view.showsFPS = true
-//                    view.showsNodeCount = true
-//                }
-//            }
-//        }
->>>>>>> 4cc732318fb4683dafb9c19997f0e088955d9148
+
     }
 
     override var shouldAutorotate: Bool {
