@@ -59,12 +59,12 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
-        let BASE_R = Int32(arc4random_uniform(256))
-        let BASE_G = Int32(arc4random_uniform(256))
-        let BASE_B = Int32(arc4random_uniform(256))
-
-        fernBase.color = UIColor.init(red:14, green:0.0, blue:33
-            , alpha: 1)
+        let BASE_R = CGFloat(getColrValue())
+        let BASE_G = CGFloat(getColrValue())
+        let BASE_B = CGFloat(getColrValue())
+        
+        let BASE_COLOR = UIColor.init(red: BASE_R/255.0, green: BASE_G/255.0, blue: BASE_B/255.0, alpha: 1.0)
+        fernBase.color = BASE_COLOR
 //        fernBase.color = .purple
         fernBase.colorBlendFactor = 1.0
         addChild(fernBase)
@@ -91,10 +91,6 @@ class GameScene: SKScene {
 //            BLUE += 8
 //        }
 //
-//        //update the chameleon color
-//        Chameleon?.color = UIColor.init(red:CGFloat(RED), green:CGFloat(GREEN), blue:CGFloat(BLUE), alpha:1)
-//        Chameleon?.colorBlendFactor = 1.0
-//
 //        //Shedding would be similar based on the color, check if the color is greater than 0 and if it is subtract then update chameleon color
 //        if RED > 0{
 //            RED -= 8
@@ -111,9 +107,12 @@ class GameScene: SKScene {
         
     }
     func getColrValue() -> Int{
-        var BASE = Int(arc4random_uniform(256))
+        var BASE = Int(arc4random_uniform(255))
         if BASE % 8 != 0{
             BASE = BASE + (BASE % 8)
+            if(BASE > 255){
+                BASE = 255
+            }
         }
         return BASE;
     }
