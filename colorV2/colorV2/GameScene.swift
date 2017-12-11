@@ -18,30 +18,13 @@ class GameScene: SKScene {
     
     
     //color variables
-    var RED = CGFloat.init()
-    var BLUE = CGFloat.init()
-    var GREEN = CGFloat.init()
+    var RED = 0.0
+    var BLUE = 0.0
+    var GREEN = 0.0
     var BASE_COLOR = UIColor.clear
     
-    var interval = 8
+    var interval = 8.0
 
-    func initialize(){
-        //Things to do in the intialize FOR NOW with simplified game,
-        
-//        //initialize could also double as a reset in which case
-        RED = CGFloat.init()
-        BLUE = CGFloat.init()
-        GREEN = CGFloat.init()
-
-        //Generate a random color that works within a certain interval, in this case 8
-
-        //initialize whatever chameleon is sitting on to base color
-
-        //initialize chameleon to black
-
-        
-    }
-    
     override func didMove(to view: SKView) {
         let fernBase: SKSpriteNode = childNode(withName: "ferns") as! SKSpriteNode
         let fernBase2: SKSpriteNode = childNode(withName: "ferns_2") as! SKSpriteNode
@@ -82,10 +65,43 @@ class GameScene: SKScene {
         let greenFruit: SKSpriteNode = childNode(withName: "green") as! SKSpriteNode
         let blueFruit: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
 
-        redFruit.isUserInteractionEnabled = false;
-        greenFruit.isUserInteractionEnabled = false;
-        blueFruit.isUserInteractionEnabled = false;
+        redFruit.name = "redFruit"
+        greenFruit.name = "greenFruit"
+        blueFruit.name = "blueFruit"
+        
+        redFruit.isUserInteractionEnabled = true;
+        greenFruit.isUserInteractionEnabled = true;
+        blueFruit.isUserInteractionEnabled = true;
 
+        for touch in (touches){
+            let positionInScene = touch.location(in: self)
+            let touchedNode = self.atPoint(positionInScene)
+            if touchedNode.name != nil{
+                if touchedNode.name == "redFruit"{
+                    RED += 233.0
+                    if RED > 255.0{
+                        RED = 255.0
+                    }
+                }
+                if touchedNode.name == "greenFruit"{
+                    GREEN += 200.0
+                    if GREEN > 255.0{
+                        GREEN = 255.0
+                        
+                    }
+                }
+                if touchedNode.name == "blueFruit"{
+                    BLUE += 8.0
+                    if BLUE > 255.0{
+                        BLUE = 255.0
+                    }
+                }
+                
+                steve.color = UIColor.init(red:CGFloat(RED)/255.0, green:CGFloat(GREEN)/255.0, blue:CGFloat(BLUE)/255.0, alpha:1.0 )
+                steve.colorBlendFactor = 1.0
+            }
+        }
+        
         //this is where we add the clicks for
 //        //if you register a hit on red, blue, green etc... you'd use one of the corresponding
 //        if RED < 256{
