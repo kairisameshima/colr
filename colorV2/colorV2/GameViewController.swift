@@ -18,7 +18,7 @@ class GameViewController: UIViewController {
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
 
-        let scene = GameScene(fileNamed: "GameScene")
+        let scene = GameScene(fileNamed: "MainMenuScene")
         let skView = view as! SKView
         skView.showsFPS = true
         skView.showsNodeCount = true
@@ -27,12 +27,12 @@ class GameViewController: UIViewController {
         skView.presentScene(scene)
         skView.isMultipleTouchEnabled = true
 
-        if let scene = GKScene(fileNamed: "GameScene") {
+        if let scene = GKScene(fileNamed: "MainMenuScene") {
         
             
             // Get the SKScene from the loaded GKScene
 
-            if let sceneNode = scene.rootNode as! GameScene? {
+            if let sceneNode = scene.rootNode as! MainMenuScene? {
                 
                 
                 // Set the scale mode to scale to fit the window
