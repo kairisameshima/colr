@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "colorV2/GameScene.swift"
-            timestampString = "534645089.495194"
+            timestampString = "534658169.853075"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "didMove(to:)"
             landmarkType = "7">
          </BreakpointContent>
