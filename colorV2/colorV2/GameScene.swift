@@ -56,12 +56,14 @@ class GameScene: SKScene {
         steve.setScale(0.5)
     }
     
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
   
-
-        for touch in (touches){
+        for touch in touches{
+            print(touch.location(in: self))
             let positionInScene = touch.location(in: self)
             let touchedNode = self.atPoint(positionInScene)
+
             if(touchedNode.name != nil){
                 if touchedNode.name == "red" {
                     RED += interval
