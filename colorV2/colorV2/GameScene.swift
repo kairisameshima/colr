@@ -24,7 +24,7 @@ class GameScene: SKScene {
     var BASE_COLOR = UIColor.clear
     
     var interval = 8.0
-
+    
     override func didMove(to view: SKView) {
         let fernBase: SKSpriteNode = childNode(withName: "ferns") as! SKSpriteNode
         let fernBase2: SKSpriteNode = childNode(withName: "ferns_2") as! SKSpriteNode
@@ -58,13 +58,14 @@ class GameScene: SKScene {
         
 //        let fernBase: SKSpriteNode = childNode(withName: "ferns") as! SKSpriteNode
 //        let fernBase2: SKSpriteNode = childNode(withName: "ferns_2") as! SKSpriteNode
+        super.touchesBegan(touches, with: event)
 
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
 
         let redFruit: SKSpriteNode = childNode(withName: "red") as! SKSpriteNode
         let greenFruit: SKSpriteNode = childNode(withName: "green") as! SKSpriteNode
         let blueFruit: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
-
+        
         redFruit.name = "redFruit"
         greenFruit.name = "greenFruit"
         blueFruit.name = "blueFruit"
@@ -73,32 +74,40 @@ class GameScene: SKScene {
         greenFruit.isUserInteractionEnabled = true;
         blueFruit.isUserInteractionEnabled = true;
 
-        for touch in (touches){
+        for touch in touches{
+            print(touch.location(in: self))
             let positionInScene = touch.location(in: self)
             let touchedNode = self.atPoint(positionInScene)
             if touchedNode.name != nil{
                 if touchedNode.name == "redFruit"{
-                    RED += 233.0
+                    RED += 200.0
                     if RED > 255.0{
                         RED = 255.0
                     }
+                    steve.color = UIColor.init(red:CGFloat(RED)/255.0, green:CGFloat(GREEN)/255.0, blue:CGFloat(BLUE)/255.0, alpha:1.0 )
+                    steve.colorBlendFactor = 1.0
+
                 }
                 if touchedNode.name == "greenFruit"{
-                    GREEN += 200.0
+                    GREEN += 133.0
                     if GREEN > 255.0{
                         GREEN = 255.0
-                        
+
                     }
+                    steve.color = .purple
+                    steve.colorBlendFactor = 1.0
                 }
                 if touchedNode.name == "blueFruit"{
-                    BLUE += 8.0
+                    BLUE += 100.0
                     if BLUE > 255.0{
                         BLUE = 255.0
                     }
+                    steve.color = .black
+                    steve.colorBlendFactor = 1.0
+
                 }
-                
-                steve.color = UIColor.init(red:CGFloat(RED)/255.0, green:CGFloat(GREEN)/255.0, blue:CGFloat(BLUE)/255.0, alpha:1.0 )
-                steve.colorBlendFactor = 1.0
+                print(touchedNode.name)
+
             }
         }
         

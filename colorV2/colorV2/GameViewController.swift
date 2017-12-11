@@ -25,6 +25,7 @@ class GameViewController: UIViewController {
         skView.ignoresSiblingOrder = true
         scene?.scaleMode = .aspectFill
         skView.presentScene(scene)
+        skView.isMultipleTouchEnabled = true;
 
         if let scene = GKScene(fileNamed: "GameScene") {
         
@@ -45,6 +46,8 @@ class GameViewController: UIViewController {
                     
                     view.showsFPS = true
                     view.showsNodeCount = true
+                    view.isMultipleTouchEnabled = true;
+
                 }
             }
         }
