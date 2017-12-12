@@ -40,7 +40,7 @@ class GameScene: SKScene {
     var goodGreenLength = CGFloat(0.0)
     var goodRedAngle = CGFloat(0.0)
     var goodGreenAngle = CGFloat(0.0)
-
+    var vectorAngle = CGFloat(0.0)
     
     
     var fernBase: SKSpriteNode!
@@ -60,8 +60,8 @@ class GameScene: SKScene {
         fernBase2 = childNode(withName: "ferns_2") as! SKSpriteNode
 
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
-        let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
-
+        tongue = childNode(withName: "tongue") as! SKSpriteNode
+        print("ok made this")
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
         let BASE_B = CGFloat(getColrValue())
@@ -75,19 +75,19 @@ class GameScene: SKScene {
         
         steve.setScale(0.5)
         
-        goodBlueAngle = CGFloat(atan((450+418)/(268+248))*M_PI/180.0)
+        goodBlueAngle = CGFloat(atan((450.0+418.0)/(268+248)))
         
-        var gbl_sub = sqrt((922*922)+(516*516))
+        let gbl_sub = sqrt((922*922)+(516*516))
         goodBlueLength = CGFloat(gbl_sub)
         
-        goodGreenAngle = CGFloat(atan((425+418)/(-151+248))*M_PI/180.0)
+        goodGreenAngle = CGFloat(atan((420.0+418.0)/(-151+248)))
         
-        var ggl_sub = sqrt(898*898+399*399)
+        let ggl_sub = sqrt(898*898+399*399)
         goodGreenLength = CGFloat(ggl_sub)
         
-        goodRedAngle = CGFloat(atan((300+418)/(51+248))*M_PI/180.0)
+        goodRedAngle = CGFloat(atan((300.0+418.0)/(51+248)))
         
-        var grl_sub = sqrt(718*718+299*299)
+        let grl_sub = sqrt(718*718+299*299)
         goodRedLength = CGFloat(grl_sub)
 
     }
@@ -102,9 +102,9 @@ class GameScene: SKScene {
 
             if(touchedNode.name != nil){
                 if touchedNode.name == "dragSpace"{
+                    print("here??")
                     initialLoc = touch.location(in: self)
                     touchedDrag = true
-                    retracting = false
                 }
                 if touchedNode.name == "red" {
                     RED += interval
@@ -154,48 +154,68 @@ class GameScene: SKScene {
         displayScore()
     }
     func calculateTongue(startPoint: CGPoint, endPoint: CGPoint){
-        var diffX = startPoint.x - endPoint.x
-        var diffY = startPoint.y - endPoint.y
-        var hypot = sqrt(diffX*diffX+diffY*diffY)
-        desiredAngle = atan(diffY/diffX)
+        let diffX = startPoint.x - endPoint.x
+        let diffY = startPoint.y - endPoint.y
+        let hypot = sqrt(diffX*diffX+diffY*diffY)
+        desiredAngle = atan(diffX/diffY)
+        print("THIS IS THE DESIRED ANGLE ",desiredAngle)
         desiredLength = 2.5*hypot
-        tongue.zRotation = (desiredAngle * CGFloat(M_PI))/180.0
+        tongue.zRotation = (-desiredAngle)
     }
     func changeTongueLength(){
+        
+        print("changing tongue length")
         let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
-        if(actualLength<desiredAngle && !retracting){
-            actualLength+=5
+        print("TONGUE ANGLE: ",tongue.zRotation)
+        print("size.height: ",tongue.size.height)
+        print("actual length: ",actualLength)
+        print("desiredLength: ",desiredLength)
+        if(actualLength<desiredLength && !retracting){
+            actualLength = actualLength+15
+            print("adding 5")
             tongue.size.height = actualLength
         }
-        else if(actualLength>desiredAngle){//reached max length
+        else if(actualLength>desiredLength && !retracting){//reached max length
             retracting = true
-            if(abs(desiredAngle-goodRedAngle)<0.17){
-                if(abs(desiredLength-goodRedLength)<50){
-                    RED+=interval
-                }
+            print("reached max length")
+            let finalX = cos(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.x//wouldnt let me use double.pi too lazy to circumvent programmatically
+            let finalY = sin(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.y
+            print("Starting coordinates: ",tongue.position.x,",",tongue.position.y)
+            print("Final coordinates: ",finalX,",",finalY)
+            print("are we retracting: ",retracting)
+            if(finalX > -200 && finalX < -120 && finalY < 475 && finalY > 398){
+                RED+=interval
+                print("hit red")
             }
-            else if(abs(desiredAngle-goodBlueAngle)<0.17){
-                if(abs(desiredLength-goodBlueLength)<50){
-                    BLUE+=interval
-                }
-            }
-            else if(abs(desiredAngle-goodGreenAngle)<0.17){
-                if(abs(desiredLength-goodGreenLength)<50){
+            else if(finalX < 80 && finalX > 5 && finalY > 242 && finalY < 360){
                     GREEN+=interval
+                    print("hit green")
                 }
+            
+            else if( finalX > 223 && finalX < 320 && finalY > 400 && finalY < 490){
+            BLUE+=interval
+            print("hit blue")
+            
             }
         }
-        else if(actualLength<desiredLength && retracting){
-            actualLength-=5
+        else if(retracting && actualLength>15){
+            print("are we retracting: ",retracting)
+            actualLength = actualLength-15
+            print("subtracting 5")
             tongue.size.height = actualLength
         }
-        else if(actualLength<5){
+        else if(actualLength<=15){
+            print("are we retracting: ",retracting)
             actualLength = 0
+            print("stop moving")
             tongue.size.height = actualLength
             retracting = false
+            desiredLength = 0;
+        }
+        else{
+            print("i didnt know there was a possible other option")
         }
     }
-    
     func changeSteveColor() {
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
 
