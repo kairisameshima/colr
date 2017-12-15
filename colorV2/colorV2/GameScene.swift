@@ -29,6 +29,7 @@ class GameScene: SKScene {
     var dragSpace: SKSpriteNode!
     var initialLoc = CGPoint(x: 0.0 , y:0.0)
     var endLoc = CGPoint(x: 0.0 , y:0.0)
+    var growing = false
     var retracting = false
     var tongue: SKSpriteNode!
     var desiredLength = CGFloat(0.0)
@@ -154,7 +155,7 @@ class GameScene: SKScene {
                 print("help")
                 endLoc = touch.location(in: self)
                 touchedDrag = false
-                if(endLoc.y < initialLoc.y){
+                if(endLoc.y < initialLoc.y && !retracting && !growing){
                     calculateTongue(startPoint: initialLoc, endPoint: endLoc)
                 }
             }
@@ -184,12 +185,14 @@ class GameScene: SKScene {
         print("actual length: ",actualLength)
         print("desiredLength: ",desiredLength)
         if(actualLength<desiredLength && !retracting){
+            growing = true
             actualLength = actualLength+15
             print("adding 5")
             tongue.size.height = actualLength
         }
         else if(actualLength>desiredLength && !retracting){//reached max length
             retracting = true
+            growing = false
             print("reached max length")
             finalX = Double(cos(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.x)//wouldnt let me use double.pi too lazy to circumvent programmatically
            finalY = Double(sin(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.y)
