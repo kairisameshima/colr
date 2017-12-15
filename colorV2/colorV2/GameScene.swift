@@ -35,12 +35,6 @@ class GameScene: SKScene {
     var desiredLength = CGFloat(0.0)
     var desiredAngle = CGFloat(0.0)
     var actualLength = CGFloat(0.0)
-    var goodBlueAngle = CGFloat(0.0)
-    var goodBlueLength = CGFloat(0.0)
-    var goodRedLength = CGFloat(0.0)
-    var goodGreenLength = CGFloat(0.0)
-    var goodRedAngle = CGFloat(0.0)
-    var goodGreenAngle = CGFloat(0.0)
     var vectorAngle = CGFloat(0.0)
     var changedColor = false
     var hitRed = false
@@ -71,7 +65,8 @@ class GameScene: SKScene {
         
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
         tongue = childNode(withName: "tongue") as! SKSpriteNode
-        print("ok made this")
+        print("ANCHOR: ",tongue.position.x,",",tongue.position.y)
+        //print("ok made this")
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
         let BASE_B = CGFloat(getColrValue())
@@ -84,21 +79,8 @@ class GameScene: SKScene {
         fernBase2.colorBlendFactor = 1.0
         
         steve.setScale(0.5)
-        
-        goodBlueAngle = CGFloat(atan((450.0+418.0)/(268+248)))
-        
-        let gbl_sub = sqrt((922*922)+(516*516))
-        goodBlueLength = CGFloat(gbl_sub)
-        
-        goodGreenAngle = CGFloat(atan((420.0+418.0)/(-151+248)))
-        
-        let ggl_sub = sqrt(898*898+399*399)
-        goodGreenLength = CGFloat(ggl_sub)
-        
-        goodRedAngle = CGFloat(atan((300.0+418.0)/(51+248)))
-        
-        let grl_sub = sqrt(718*718+299*299)
-        goodRedLength = CGFloat(grl_sub)
+
+   
 
     }
     
@@ -106,13 +88,13 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
   
         for touch in touches{
-            print(touch.location(in: self))
+            //print(touch.location(in: self))
             let positionInScene = touch.location(in: self)
             let touchedNode = self.atPoint(positionInScene)
 
             if(touchedNode.name != nil){
                 if touchedNode.name == "dragSpace"{
-                    print("here??")
+                   // print("here??")
                     initialLoc = touch.location(in: self)
                     touchedDrag = true
                 }
@@ -173,40 +155,43 @@ class GameScene: SKScene {
         let diffY = startPoint.y - endPoint.y
         let hypot = sqrt(diffX*diffX+diffY*diffY)
         desiredAngle = atan(diffX/diffY)
-        print("THIS IS THE DESIRED ANGLE ",desiredAngle)
+        //print("THIS IS THE DESIRED ANGLE ",desiredAngle)
         desiredLength = 3*hypot
         tongue.zRotation = (-desiredAngle)
     }
     func changeTongueLength(){
-        print("changing tongue length")
+        checkRedCollision()
+        checkBlueCollision()
+        checkGreenCollision()
+        //print("changing tongue length")
         let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
-        print("TONGUE ANGLE: ",tongue.zRotation)
-        print("size.height: ",tongue.size.height)
-        print("actual length: ",actualLength)
-        print("desiredLength: ",desiredLength)
+       // print("TONGUE ANGLE: ",tongue.zRotation)
+        //print("size.height: ",tongue.size.height)
+      //  print("actual length: ",actualLength)
+        //print("desiredLength: ",desiredLength)
         if(actualLength<desiredLength && !retracting){
             growing = true
             actualLength = actualLength+15
-            print("adding 5")
+            //print("adding 5")
             tongue.size.height = actualLength
         }
-        else if(actualLength>desiredLength && !retracting){//reached max length
+        else if(desiredLength <= actualLength && !retracting){//reached max length
             retracting = true
             growing = false
-            print("reached max length")
+            //print("reached max length")
             finalX = Double(cos(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.x)//wouldnt let me use double.pi too lazy to circumvent programmatically
            finalY = Double(sin(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.y)
             print("Starting coordinates: ",tongue.position.x,",",tongue.position.y)
             print("Final coordinates: ",finalX,",",finalY)
             print("are we retracting: ",retracting)
-            if(finalX > -200 && finalX < -120 && finalY < 475 && finalY > 398){
+            if(checkRedCollision()){
                 //RED+=interval
                 playSoundWith(fileName: "pop", fileExtension: "mp3")
                 changedColor = true
                 hitRed = true
                 print("hit red")
             }
-            else if(finalX < 80 && finalX > 5 && finalY > 242 && finalY < 360){
+            else if(checkGreenCollision()){
                 //GREEN+=interval
                 hitGreen = true
                 changedColor = true
@@ -214,7 +199,7 @@ class GameScene: SKScene {
                     print("hit green")
                 }
             
-            else if( finalX > 223 && finalX < 320 && finalY > 400 && finalY < 490){
+            else if(checkBlueCollision()){
                 //BLUE+=interval
                 hitBlue = true
                 changedColor = true
@@ -412,5 +397,137 @@ class GameScene: SKScene {
             banana.size.width+=10.204/2.0
             banana.size.height+=10.204/2.0
         }
+    }
+    func checkRedCollision()-> Bool {
+        let yLine1 = CGFloat(395.0)
+        let xLine1 = CGFloat(-208.0)
+        let xLine2 = CGFloat(-116.0)
+        let yLine2 = CGFloat(492.0)
+        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        var b = tongue.position.y-(slope*tongue.position.x)
+        var checkYLine1XValue = (yLine1-b)/slope
+        var checkYLine2XValue = (yLine2-b)/slope
+        var checkXLine1YValue = slope*xLine1+b
+        var checkXLine2YValue = slope*xLine2+b
+        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine1XValue)
+                self.finalY = Double(yLine1)
+                return true
+            }
+        }
+        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine2XValue)
+                self.finalY = Double(yLine2)
+                return true
+            }
+        }
+        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine1YValue)
+                self.finalY = Double(xLine1)
+                return true
+            }
+        }
+        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine2YValue)
+                self.finalY = Double(xLine2)
+                return true
+            }
+        }
+        return false
+    }
+    func checkGreenCollision()-> Bool {
+        print("CHECKING FOR GREEN COLLISIONS")
+        let yLine1 = CGFloat(-364.0)
+        let xLine1 = CGFloat(1.0)
+        let xLine2 = CGFloat(84.0)
+        let yLine2 = CGFloat(-238.05)
+        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        var b = tongue.position.y-(slope*tongue.position.x)
+        var checkYLine1XValue = (yLine1-b)/slope
+        var checkYLine2XValue = (yLine2-b)/slope
+        var checkXLine1YValue = slope*xLine1+b
+        var checkXLine2YValue = slope*xLine2+b
+        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine1XValue)
+                self.finalY = Double(yLine1)
+                print("green 1 yes")
+                return true
+            }
+        }
+        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine2XValue)
+                self.finalY = Double(yLine2)
+                print("green 2 yes")
+                return true
+            }
+        }
+        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine1YValue)
+                self.finalY = Double(xLine1)
+                print("green 3 yes")
+                return true
+            }
+        }
+        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine2YValue)
+                self.finalY = Double(xLine2)
+                return true
+                print("green 4 yes")
+            }
+        }
+        print("GREEN FAILURE: ",finalX,",",finalY)
+        return false
+    }
+    func checkBlueCollision()-> Bool {
+        let yLine1 = CGFloat(392)
+        let xLine1 = CGFloat(218)
+        let xLine2 = CGFloat(320)
+        let yLine2 = CGFloat(493)
+        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        var b = tongue.position.y-(slope*tongue.position.x)
+        var checkYLine1XValue = (yLine1-b)/slope
+        var checkYLine2XValue = (yLine2-b)/slope
+        var checkXLine1YValue = slope*xLine1+b
+        var checkXLine2YValue = slope*xLine2+b
+        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine1XValue)
+                self.finalY = Double(yLine1)
+                return true
+            }
+        }
+        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkYLine2XValue)
+                self.finalY = Double(yLine2)
+                return true
+            }
+        }
+        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine1YValue)
+                self.finalY = Double(xLine1)
+                return true
+            }
+        }
+        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
+            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
+                self.finalX = Double(checkXLine2YValue)
+                self.finalY = Double(xLine2)
+                return true
+            }
+        }
+        return false
+    }
+    func distanceFunction(startX: CGFloat, startY: CGFloat, endX: CGFloat, endY: CGFloat) -> CGFloat{
+        return sqrt((endY-startY)*(endY-startY)+(endX-startX)*(endX-startX))
     }
 }
