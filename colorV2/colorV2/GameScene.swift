@@ -197,7 +197,7 @@ class GameScene: SKScene {
         print("desiredLength: ",desiredLength)
         if(actualLength<desiredLength && !retracting){
             if(!open_mouth){
-                head.run(SKAction.rotate(byAngle: -0.77, duration: 0.8))
+                head.run(SKAction.rotate(byAngle: -0.9, duration: 0.8))
                 open_mouth = true;
             }
             actualLength = actualLength+15
@@ -237,7 +237,7 @@ class GameScene: SKScene {
             print("are we retracting: ",retracting)
             actualLength = 0
             if(open_mouth){
-                head.run(SKAction.rotate(byAngle: 0.77, duration: 0.8))
+                head.run(SKAction.rotate(byAngle: 0.9, duration: 0.8))
                 open_mouth = false;
             }
 
