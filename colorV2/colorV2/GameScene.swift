@@ -46,7 +46,7 @@ class GameScene: SKScene {
     var fernBase: SKSpriteNode!
     var fernBase2: SKSpriteNode!
     
-    let tongueSpeed = CGFloat(30.0)
+    let tongueSpeed = CGFloat(20.0)
     
     var interval = 32.0
     var interval2 = 32
@@ -197,8 +197,8 @@ class GameScene: SKScene {
         if(actualLength<desiredLength && !retracting){
             if(!open_mouth){
                 var actions = Array<SKAction>()
-                actions.append(SKAction.rotate(byAngle: -1.5, duration: 0.5))
-                actions.append(SKAction.moveBy(x: 40.0, y: 0.0, duration: 0.5))
+                actions.append(SKAction.rotate(byAngle: -1.5, duration: 0.3))
+                actions.append(SKAction.moveBy(x: 40.0, y: 0.0, duration: 0.3))
                 let group = SKAction.group(actions);
                 head.run(group)
                 
