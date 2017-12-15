@@ -196,7 +196,12 @@ class GameScene: SKScene {
         print("desiredLength: ",desiredLength)
         if(actualLength<desiredLength && !retracting){
             if(!open_mouth){
-                head.run(SKAction.rotate(byAngle: -0.9, duration: 0.8))
+                var actions = Array<SKAction>()
+                actions.append(SKAction.rotate(byAngle: -1.5, duration: 0.5))
+                actions.append(SKAction.moveBy(x: 40.0, y: 0.0, duration: 0.5))
+                let group = SKAction.group(actions);
+                head.run(group)
+                
                 open_mouth = true;
             }
             actualLength = actualLength+tongueSpeed
@@ -236,7 +241,11 @@ class GameScene: SKScene {
             print("are we retracting: ",retracting)
             actualLength = 0
             if(open_mouth){
-                head.run(SKAction.rotate(byAngle: 0.9, duration: 0.8))
+                var actions = Array<SKAction>()
+                actions.append(SKAction.rotate(byAngle: 1.5, duration: 0.5))
+                actions.append(SKAction.moveBy(x: -40.0, y: 0.0, duration: 0.5))
+                let group = SKAction.group(actions);
+                head.run(group)
                 open_mouth = false;
             }
 
@@ -286,9 +295,9 @@ class GameScene: SKScene {
         greenLevel = childNode(withName: "greenVal") as! SKLabelNode
         blueLevel = childNode(withName: "blueVal") as! SKLabelNode
 
-        redLevel.text = "red:\(RED) out of 256"
-        greenLevel.text = "green:\(GREEN) out of 256"
-        blueLevel.text = "blue:\(BLUE) out of 256"
+        redLevel.text = "red: \(Int(RED)) out of 256"
+        greenLevel.text = "green: \(Int(GREEN)) out of 256"
+        blueLevel.text = "blue: \(Int(BLUE)) out of 256"
         
         let redLocation =  CGPoint(x: 45, y: 200)
         let greenLocation =  CGPoint(x: 45, y: 150)
@@ -305,7 +314,7 @@ class GameScene: SKScene {
         greenLevel = childNode(withName: "greenVal") as! SKLabelNode
         blueLevel = childNode(withName: "blueVal") as! SKLabelNode
         
-        let Location =  CGPoint(x: -400, y: -750)
+        let Location =  CGPoint(x: 400, y: -750)
         
         redLevel.run(SKAction.move(to: Location, duration: 1.0))
         greenLevel.run(SKAction.move(to: Location, duration: 1.0))
