@@ -53,6 +53,17 @@ class GameScene: SKScene {
     var resetButton: SKLabelNode!
     var scoreLabel: SKLabelNode!
     
+    var colorLevel:SKSpriteNode!
+    var redLevel: SKLabelNode!
+    var greenLevel: SKLabelNode!
+    var blueLevel: SKLabelNode!
+
+    var steve_head: SKSpriteNode!
+    var steve_body: SKSpriteNode!
+    var open_mouth = false;
+
+    var show_level = true;
+    
     var score = 0
     
     override func didMove(to view: SKView) {
@@ -61,6 +72,9 @@ class GameScene: SKScene {
 
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
         tongue = childNode(withName: "tongue") as! SKSpriteNode
+        let steve_head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
+        let steve_body: SKSpriteNode = childNode(withName: "body") as! SKSpriteNode
+        
         print("ok made this")
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
@@ -73,7 +87,7 @@ class GameScene: SKScene {
         fernBase2.color = BASE_COLOR
         fernBase2.colorBlendFactor = 1.0
         
-        steve.setScale(0.5)
+//        steve.setScale(0.5)
         
         goodBlueAngle = CGFloat(atan((450.0+418.0)/(268+248)))
         
@@ -132,6 +146,16 @@ class GameScene: SKScene {
                 if touchedNode.name == "playAgain" {
                     resetGame()
                 }
+                if touchedNode.name == "level"{
+                    if(show_level){
+                        displayLevels()
+                        show_level = false
+                    }
+                    else{
+                        hideLevels()
+                        show_level = true;
+                    }
+                }
                 checkWinStatus()
             }
         }
@@ -166,11 +190,16 @@ class GameScene: SKScene {
         
         print("changing tongue length")
         let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
+        let head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
         print("TONGUE ANGLE: ",tongue.zRotation)
         print("size.height: ",tongue.size.height)
         print("actual length: ",actualLength)
         print("desiredLength: ",desiredLength)
         if(actualLength<desiredLength && !retracting){
+            if(!open_mouth){
+                head.run(SKAction.rotate(byAngle: -0.77, duration: 0.8))
+                open_mouth = true;
+            }
             actualLength = actualLength+15
             print("adding 5")
             tongue.size.height = actualLength
@@ -207,6 +236,11 @@ class GameScene: SKScene {
         else if(actualLength<=15){
             print("are we retracting: ",retracting)
             actualLength = 0
+            if(open_mouth){
+                head.run(SKAction.rotate(byAngle: 0.77, duration: 0.8))
+                open_mouth = false;
+            }
+
             print("stop moving")
             tongue.size.height = actualLength
             retracting = false
@@ -219,13 +253,22 @@ class GameScene: SKScene {
     func changeSteveColor() {
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
 
+        let steve_head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
+        let steve_body: SKSpriteNode = childNode(withName: "body") as! SKSpriteNode
+
         currentColor = UIColor.init(red:CGFloat(RED)/255.0, green:CGFloat(GREEN)/255.0, blue:CGFloat(BLUE)/255.0, alpha:1.0 )
         
         print(currentColor)
         print(BASE_COLOR)
         
-        steve.color = currentColor
-        steve.colorBlendFactor = 1.0
+//        steve.color = currentColor
+//        steve.colorBlendFactor = 1.0
+
+        steve_head.color = currentColor
+        steve_head.colorBlendFactor = 1.0
+
+        steve_body.color = currentColor
+        steve_body.colorBlendFactor = 1.0
 
     }
     
@@ -243,7 +286,38 @@ class GameScene: SKScene {
         scoreLabel.text = "Score:\(score)"
         
     }
-    
+    func displayLevels(){
+        redLevel = childNode(withName: "redVal") as! SKLabelNode
+        greenLevel = childNode(withName: "greenVal") as! SKLabelNode
+        blueLevel = childNode(withName: "blueVal") as! SKLabelNode
+
+        redLevel.text = "red:\(RED) out of 256"
+        greenLevel.text = "green:\(GREEN) out of 256"
+        blueLevel.text = "blue:\(BLUE) out of 256"
+        
+        let redLocation =  CGPoint(x: 45, y: 200)
+        let greenLocation =  CGPoint(x: 45, y: 150)
+        let blueLocation =  CGPoint(x: 45, y: 100)
+
+        redLevel.run(SKAction.move(to: redLocation, duration: 1.0))
+        greenLevel.run(SKAction.move(to: greenLocation, duration: 1.0))
+        blueLevel.run(SKAction.move(to: blueLocation, duration: 1.0))
+
+
+    }
+    func hideLevels(){
+        redLevel = childNode(withName: "redVal") as! SKLabelNode
+        greenLevel = childNode(withName: "greenVal") as! SKLabelNode
+        blueLevel = childNode(withName: "blueVal") as! SKLabelNode
+        
+        let Location =  CGPoint(x: -400, y: -750)
+        
+        redLevel.run(SKAction.move(to: Location, duration: 1.0))
+        greenLevel.run(SKAction.move(to: Location, duration: 1.0))
+        blueLevel.run(SKAction.move(to: Location, duration: 1.0))
+        
+        
+    }
     func winMessage() {
         message = childNode(withName: "winMessage") as! SKLabelNode
         resetButton = childNode(withName: "playAgain") as! SKLabelNode
