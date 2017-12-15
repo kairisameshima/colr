@@ -46,6 +46,8 @@ class GameScene: SKScene {
     var fernBase: SKSpriteNode!
     var fernBase2: SKSpriteNode!
     
+    let tongueSpeed = CGFloat(30.0)
+    
     var interval = 32.0
     var interval2 = 32
     var steve: SKSpriteNode!
@@ -123,23 +125,18 @@ class GameScene: SKScene {
                 if touchedNode.name == "red" {
                     RED += interval
                 }
-                
                 if touchedNode.name == "green" {
                     GREEN += interval
                 }
-                
                 if touchedNode.name == "blue" {
                     BLUE += interval
                 }
-                
                 if touchedNode.name == "redMinus" {
                     RED -= interval
                 }
-                
                 if touchedNode.name == "greenMinus" {
                     GREEN -= interval
                 }
-
                 if touchedNode.name == "blueMinus" {
                     BLUE -= interval
                 }
@@ -177,6 +174,7 @@ class GameScene: SKScene {
         changeSteveColor()
         displayScore()
     }
+    
     func calculateTongue(startPoint: CGPoint, endPoint: CGPoint){
         let diffX = startPoint.x - endPoint.x
         let diffY = startPoint.y - endPoint.y
@@ -186,6 +184,7 @@ class GameScene: SKScene {
         desiredLength = 2.5*hypot
         tongue.zRotation = (-desiredAngle)
     }
+    
     func changeTongueLength(){
         
         print("changing tongue length")
@@ -200,7 +199,7 @@ class GameScene: SKScene {
                 head.run(SKAction.rotate(byAngle: -0.9, duration: 0.8))
                 open_mouth = true;
             }
-            actualLength = actualLength+15
+            actualLength = actualLength+tongueSpeed
             print("adding 5")
             tongue.size.height = actualLength
         }
@@ -229,7 +228,7 @@ class GameScene: SKScene {
         }
         else if(retracting && actualLength>15){
             print("are we retracting: ",retracting)
-            actualLength = actualLength-15
+            actualLength = actualLength-tongueSpeed
             print("subtracting 5")
             tongue.size.height = actualLength
         }
@@ -261,15 +260,11 @@ class GameScene: SKScene {
         print(currentColor)
         print(BASE_COLOR)
         
-//        steve.color = currentColor
-//        steve.colorBlendFactor = 1.0
-
         steve_head.color = currentColor
         steve_head.colorBlendFactor = 1.0
 
         steve_body.color = currentColor
         steve_body.colorBlendFactor = 1.0
-
     }
     
     // This function will check whether or not the chameleon is the correct color, if it is, it will display some text!
@@ -315,8 +310,6 @@ class GameScene: SKScene {
         redLevel.run(SKAction.move(to: Location, duration: 1.0))
         greenLevel.run(SKAction.move(to: Location, duration: 1.0))
         blueLevel.run(SKAction.move(to: Location, duration: 1.0))
-        
-        
     }
     func winMessage() {
         message = childNode(withName: "winMessage") as! SKLabelNode
