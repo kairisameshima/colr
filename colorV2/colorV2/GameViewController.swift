@@ -9,9 +9,23 @@
 import UIKit
 import SpriteKit
 import GameplayKit
-
+import AVFoundation
 class GameViewController: UIViewController {
-    
+    var backgroundMusic: AVAudioPlayer!
+    func playSoundWith(fileName: String, fileExtension: String){
+        let audioSourceURL: URL!
+        audioSourceURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension)
+        do{
+            backgroundMusic = try AVAudioPlayer.init(contentsOf: audioSourceURL!)
+            backgroundMusic.prepareToPlay()
+            backgroundMusic.setVolume(0.1, fadeDuration: 0)
+            backgroundMusic.play()
+            backgroundMusic.numberOfLoops = -1
+        }
+        catch{
+            print("darn")
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,6 +34,7 @@ class GameViewController: UIViewController {
 
         let scene = GameScene(fileNamed: "MainMenuScene")
         let skView = view as! SKView
+        playSoundWith(fileName: "background", fileExtension: "mp3")
         skView.showsFPS = true
         skView.showsNodeCount = true
         skView.ignoresSiblingOrder = true
