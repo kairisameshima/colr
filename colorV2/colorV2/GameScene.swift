@@ -29,12 +29,17 @@ class GameScene: SKScene {
     var dragSpace: SKSpriteNode!
     var initialLoc = CGPoint(x: 0.0 , y:0.0)
     var endLoc = CGPoint(x: 0.0 , y:0.0)
-    var growing = false
     var retracting = false
     var tongue: SKSpriteNode!
     var desiredLength = CGFloat(0.0)
     var desiredAngle = CGFloat(0.0)
     var actualLength = CGFloat(0.0)
+    var goodBlueAngle = CGFloat(0.0)
+    var goodBlueLength = CGFloat(0.0)
+    var goodRedLength = CGFloat(0.0)
+    var goodGreenLength = CGFloat(0.0)
+    var goodRedAngle = CGFloat(0.0)
+    var goodGreenAngle = CGFloat(0.0)
     var vectorAngle = CGFloat(0.0)
     var changedColor = false
     var hitRed = false
@@ -55,7 +60,18 @@ class GameScene: SKScene {
     var finalX = 0.0
     var finalY = 0.0
     var score = 0
-    
+    var tongueIsFlying = false
+    var colorLevel:SKSpriteNode!
+    var redLevel: SKLabelNode!
+    var greenLevel: SKLabelNode!
+    var blueLevel: SKLabelNode!
+    var show_level = true;
+
+
+    var steve_head: SKSpriteNode!
+    var steve_body: SKSpriteNode!
+    var open_mouth = false;
+
     override func didMove(to view: SKView) {
         fernBase = childNode(withName: "ferns") as! SKSpriteNode
         fernBase2 = childNode(withName: "ferns_2") as! SKSpriteNode
@@ -64,9 +80,11 @@ class GameScene: SKScene {
         let blueberry: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
         
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
+        let steve_head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
+        let steve_body: SKSpriteNode = childNode(withName: "body") as! SKSpriteNode
+
         tongue = childNode(withName: "tongue") as! SKSpriteNode
-        print("ANCHOR: ",tongue.position.x,",",tongue.position.y)
-        //print("ok made this")
+        print("ok made this")
         let BASE_R = CGFloat(getColrValue())
         let BASE_G = CGFloat(getColrValue())
         let BASE_B = CGFloat(getColrValue())
@@ -78,9 +96,22 @@ class GameScene: SKScene {
         fernBase2.color = BASE_COLOR
         fernBase2.colorBlendFactor = 1.0
         
-        steve.setScale(0.5)
-
-   
+//        steve.setScale(0.5)
+        
+        goodBlueAngle = CGFloat(atan((450.0+418.0)/(268+248)))
+        
+        let gbl_sub = sqrt((922*922)+(516*516))
+        goodBlueLength = CGFloat(gbl_sub)
+        
+        goodGreenAngle = CGFloat(atan((420.0+418.0)/(-151+248)))
+        
+        let ggl_sub = sqrt(898*898+399*399)
+        goodGreenLength = CGFloat(ggl_sub)
+        
+        goodRedAngle = CGFloat(atan((300.0+418.0)/(51+248)))
+        
+        let grl_sub = sqrt(718*718+299*299)
+        goodRedLength = CGFloat(grl_sub)
 
     }
     
@@ -93,8 +124,9 @@ class GameScene: SKScene {
             let touchedNode = self.atPoint(positionInScene)
 
             if(touchedNode.name != nil){
-                if touchedNode.name == "dragSpace"{
-                   // print("here??")
+                if touchedNode.name == "dragSpace" && !tongueIsFlying{
+                    print("TOUCH DETECTED")
+                    //print("here??")
                     initialLoc = touch.location(in: self)
                     touchedDrag = true
                 }
@@ -127,6 +159,16 @@ class GameScene: SKScene {
                 if touchedNode.name == "playAgain" {
                     resetGame()
                 }
+                if touchedNode.name == "level"{
+                    if(show_level){
+                        displayLevels()
+                        show_level = false
+                    }
+                    else{
+                        hideLevels()
+                        show_level = true;
+                    }
+                }
                 checkWinStatus()
             }
         }
@@ -134,10 +176,10 @@ class GameScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?){
         for touch in touches{
             if(touchedDrag){
-                print("help")
+                //print("help")
                 endLoc = touch.location(in: self)
                 touchedDrag = false
-                if(endLoc.y < initialLoc.y && !retracting && !growing){
+                if(endLoc.y < initialLoc.y){
                     calculateTongue(startPoint: initialLoc, endPoint: endLoc)
                 }
             }
@@ -145,84 +187,104 @@ class GameScene: SKScene {
     }
     override func update(_ currentTime: TimeInterval) {
         changeTongueLength()
+        print(actualLength)
+        print(tongueIsFlying)
         changeSteveColor()
         displayScore()
         respawnFruit()
     }
     func calculateTongue(startPoint: CGPoint, endPoint: CGPoint){
+        print("CALCULATING TONGUE")
+        print(startPoint,"  ",endPoint)
         playSoundWith(fileName: "swish", fileExtension: "mp3")
         let diffX = startPoint.x - endPoint.x
         let diffY = startPoint.y - endPoint.y
+        print("diffX: ",diffX,"diffY: ",diffY)
         let hypot = sqrt(diffX*diffX+diffY*diffY)
+        print("First vector length: ",hypot)
         desiredAngle = atan(diffX/diffY)
-        //print("THIS IS THE DESIRED ANGLE ",desiredAngle)
-        desiredLength = 3*hypot
-        tongue.zRotation = (-desiredAngle)
+        print("Vector angle: ",180.0/3.1415*desiredAngle)
+        desiredLength = min(3*hypot,1000)
+        finalX = Double(sin(desiredAngle)*desiredLength+tongue.position.x)
+        finalY = Double(cos(desiredAngle)*desiredLength+tongue.position.y)
+        tongue.zRotation = -desiredAngle
+        if(collideRed()){
+            print("hit da red")
+            tongue.zRotation = -0.0523
+            desiredLength = 788.64
+            hitRed = true
+            changedColor = true
+        }
+        if(collideGreen()){
+            hitGreen = true
+            changedColor = true
+            desiredLength = 698.0
+            tongue.zRotation = -0.389
+            print("hit da green")
+        }
+        if(collideBlue()){
+            hitBlue = true
+            hitGreen = false
+            changedColor = true
+            desiredLength = 912.0
+            tongue.zRotation = -0.5358
+            print("hit da blue")
+        }
+        print("Z rotation: ",tongue.zRotation*180/3.14159265)
+        print("Final X: ",finalX,"Final Y:",finalY)
+        
+        
     }
     func changeTongueLength(){
-        checkRedCollision()
-        checkBlueCollision()
-        checkGreenCollision()
-        //print("changing tongue length")
         let tongue: SKSpriteNode = childNode(withName: "tongue") as! SKSpriteNode
-       // print("TONGUE ANGLE: ",tongue.zRotation)
-        //print("size.height: ",tongue.size.height)
-      //  print("actual length: ",actualLength)
-        //print("desiredLength: ",desiredLength)
+        let head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
         if(actualLength<desiredLength && !retracting){
-            growing = true
-            actualLength = actualLength+15
-            //print("adding 5")
+            tongueIsFlying = true
+            if(!open_mouth){
+                var actions = Array<SKAction>()
+                actions.append(SKAction.rotate(byAngle: -1.5, duration: 0.3))
+                actions.append(SKAction.moveBy(x: 40.0, y: 0.0, duration: 0.3))
+                let group = SKAction.group(actions);
+                head.run(group)
+                
+                open_mouth = true;
+            }
+
+            actualLength = actualLength+20
+           // print("adding 5")
             tongue.size.height = actualLength
         }
-        else if(desiredLength <= actualLength && !retracting){//reached max length
+        else if(actualLength>=desiredLength && !retracting && actualLength>0 ){//reached max length
+            if(changedColor){
+                playSoundWith(fileName: "pop", fileExtension: "mp3")}
             retracting = true
-            growing = false
-            //print("reached max length")
-            finalX = Double(cos(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.x)//wouldnt let me use double.pi too lazy to circumvent programmatically
-           finalY = Double(sin(0.5*3.14159265-desiredAngle)*desiredLength+tongue.position.y)
-            print("Starting coordinates: ",tongue.position.x,",",tongue.position.y)
-            print("Final coordinates: ",finalX,",",finalY)
-            print("are we retracting: ",retracting)
-            if(checkRedCollision()){
-                //RED+=interval
-                playSoundWith(fileName: "pop", fileExtension: "mp3")
-                changedColor = true
-                hitRed = true
-                print("hit red")
-            }
-            else if(checkGreenCollision()){
-                //GREEN+=interval
-                hitGreen = true
-                changedColor = true
-                playSoundWith(fileName: "pop", fileExtension: "mp3")
-                    print("hit green")
-                }
             
-            else if(checkBlueCollision()){
-                //BLUE+=interval
-                hitBlue = true
-                changedColor = true
-                playSoundWith(fileName: "pop", fileExtension: "mp3")
-                print("hit blue")
-            
-            }
         }
-        else if(retracting && actualLength>15){
+        else if(retracting && actualLength>20){
             if(hitRed||hitBlue||hitGreen){
                 moveFruit()
             }
-            
-            print("are we retracting: ",retracting)
-            actualLength = actualLength-15
-            print("subtracting 5")
+
+
+            //print("are we retracting: ",retracting)
+            actualLength = actualLength-20
+            //print("subtracting 5")
             tongue.size.height = actualLength
-            if(actualLength<=15 && changedColor){
-                playSoundWith(fileName: "bling", fileExtension: "mp3")
-                changedColor = false
+            if(open_mouth){
+                var actions = Array<SKAction>()
+                actions.append(SKAction.rotate(byAngle: 1.5, duration: 0.5))
+                actions.append(SKAction.moveBy(x: -40.0, y: 0.0, duration: 0.5))
+                let group = SKAction.group(actions);
+                head.run(group)
+                open_mouth = false;
             }
+
         }
-        else if(actualLength<=15){
+        else if(actualLength<=20){
+            if(changedColor){
+            playSoundWith(fileName: "bling", fileExtension: "mp3")
+            changedColor = false
+            }
             if(hitRed){
                 let apple: SKSpriteNode = childNode(withName: "red") as! SKSpriteNode
                 apple.size.width = 0
@@ -250,27 +312,33 @@ class GameScene: SKScene {
                 GREEN+=interval
                 hitGreen = false
             }
-            print("are we retracting: ",retracting)
+            //print("are we retracting: ",retracting)
             actualLength = 0
-            print("stop moving")
+            //print("stop moving")
             tongue.size.height = actualLength
             retracting = false
             desiredLength = 0;
+            tongueIsFlying = false
         }
-        else{
-            print("i didnt know there was a possible other option")
-        }
+
     }
     func changeSteveColor() {
         let steve: SKSpriteNode = childNode(withName: "steve") as! SKSpriteNode
-
+        
+        let steve_head: SKSpriteNode = childNode(withName: "head") as! SKSpriteNode
+        let steve_body: SKSpriteNode = childNode(withName: "body") as! SKSpriteNode
+        
         currentColor = UIColor.init(red:CGFloat(RED)/255.0, green:CGFloat(GREEN)/255.0, blue:CGFloat(BLUE)/255.0, alpha:1.0 )
         
-        print(currentColor)
-        print(BASE_COLOR)
+        //print(currentColor)
+        //print(BASE_COLOR)
         
-        steve.color = currentColor
-        steve.colorBlendFactor = 1.0
+        steve_head.color = currentColor
+        steve_head.colorBlendFactor = 1.0
+        
+        steve_body.color = currentColor
+        steve_body.colorBlendFactor = 1.0
+
 
     }
     
@@ -301,7 +369,37 @@ class GameScene: SKScene {
         resetButton.run(SKAction.move(to: resetButtonLocation, duration: 2))
         
     }
-    
+    func displayLevels(){
+        redLevel = childNode(withName: "redVal") as! SKLabelNode
+        greenLevel = childNode(withName: "greenVal") as! SKLabelNode
+        blueLevel = childNode(withName: "blueVal") as! SKLabelNode
+        
+        redLevel.text = "red: \(Int(RED)) out of 256"
+        greenLevel.text = "green: \(Int(GREEN)) out of 256"
+        blueLevel.text = "blue: \(Int(BLUE)) out of 256"
+        
+        let redLocation =  CGPoint(x: 45, y: 200)
+        let greenLocation =  CGPoint(x: 45, y: 150)
+        let blueLocation =  CGPoint(x: 45, y: 100)
+        
+        redLevel.run(SKAction.move(to: redLocation, duration: 1.0))
+        greenLevel.run(SKAction.move(to: greenLocation, duration: 1.0))
+        blueLevel.run(SKAction.move(to: blueLocation, duration: 1.0))
+        
+        
+    }
+    func hideLevels(){
+        redLevel = childNode(withName: "redVal") as! SKLabelNode
+        greenLevel = childNode(withName: "greenVal") as! SKLabelNode
+        blueLevel = childNode(withName: "blueVal") as! SKLabelNode
+        
+        let Location =  CGPoint(x: 400, y: -750)
+        
+        redLevel.run(SKAction.move(to: Location, duration: 1.0))
+        greenLevel.run(SKAction.move(to: Location, duration: 1.0))
+        blueLevel.run(SKAction.move(to: Location, duration: 1.0))
+    }
+
     func resetGame() {
         // Randomize fern colors
         let BASE_R = CGFloat(getColrValue())
@@ -345,10 +443,10 @@ class GameScene: SKScene {
     func getColrValue() -> Int{
         // different steps within range using interval
         let Range = 256 / interval2
-        print(Range)
+        //print(Range)
         var BASE = Int(arc4random_uniform(UInt32(Range)))
         BASE *= interval2
-        print(BASE)
+        //print(BASE)
         return BASE;
     }
     func playSoundWith(fileName: String, fileExtension: String){
@@ -366,19 +464,28 @@ class GameScene: SKScene {
     }
     func moveFruit(){
         if(hitRed){
+            let tempAngle = atan((-160-tongue.position.x)/(440-tongue.position.y))
+            let changeX = sin(tempAngle)*20
+            let changeY = cos(tempAngle)*20
              let apple: SKSpriteNode = childNode(withName: "red") as! SKSpriteNode
-            apple.position.x-=CGFloat(CGFloat(finalX)-tongue.position.x)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
-            apple.position.y-=CGFloat(CGFloat(finalY)-tongue.position.y)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
+            apple.position.x-=changeX
+            apple.position.y-=changeY
         }
         else if(hitBlue){
             let blueberry: SKSpriteNode = childNode(withName: "blue") as! SKSpriteNode
-            blueberry.position.x-=CGFloat(CGFloat(finalX)-tongue.position.x)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
-            blueberry.position.y-=CGFloat(CGFloat(finalY)-tongue.position.y)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
+            let tempAngle = atan((268-tongue.position.x)/(439-tongue.position.y))
+            let changeX = sin(tempAngle)*20
+            let changeY = cos(tempAngle)*20
+            blueberry.position.x-=changeX
+            blueberry.position.y-=changeY
         }
         else if(hitGreen){
             let banana: SKSpriteNode = childNode(withName: "green") as! SKSpriteNode
-            banana.position.x-=CGFloat(CGFloat(finalX)-tongue.position.x)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
-            banana.position.y-=CGFloat(CGFloat(finalY)-tongue.position.y)/CGFloat(Int(desiredLength/15+desiredLength.truncatingRemainder(dividingBy: 15)))
+            let tempAngle = atan((56-tongue.position.x)/(295-tongue.position.y))
+            let changeX = sin(tempAngle)*20
+            let changeY = cos(tempAngle)*20
+            banana.position.x-=changeX
+            banana.position.y-=changeY
         }
     }
     func respawnFruit(){
@@ -398,136 +505,153 @@ class GameScene: SKScene {
             banana.size.height+=10.204/2.0
         }
     }
-    func checkRedCollision()-> Bool {
-        let yLine1 = CGFloat(395.0)
-        let xLine1 = CGFloat(-208.0)
-        let xLine2 = CGFloat(-116.0)
-        let yLine2 = CGFloat(492.0)
-        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
-        var b = tongue.position.y-(slope*tongue.position.x)
-        var checkYLine1XValue = (yLine1-b)/slope
-        var checkYLine2XValue = (yLine2-b)/slope
-        var checkXLine1YValue = slope*xLine1+b
-        var checkXLine2YValue = slope*xLine2+b
-        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine1XValue)
-                self.finalY = Double(yLine1)
+    func collideBlue() ->Bool{
+        let xLineLeft = CGFloat(214)
+        let xLineRight = CGFloat(325)
+        let yLineTop = CGFloat(500)
+        let yLineBot = CGFloat(397)
+        let slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        let yIntercept = CGFloat(finalY)-(slope*CGFloat(finalX))
+        let leftIntersect = slope*xLineLeft+yIntercept
+        let rightIntersect = slope*xLineRight+yIntercept
+        let botIntersect = (yLineBot-yIntercept)/slope
+        let topIntersect = (yLineTop-yIntercept)/slope
+        if(leftIntersect >= yLineBot && leftIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                hitBlue = true
+                hitRed = false
+                hitGreen = false
                 return true
             }
         }
-        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine2XValue)
-                self.finalY = Double(yLine2)
+        else if(rightIntersect >= yLineBot && rightIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                hitBlue = true
+                hitRed = false
+                hitGreen = false
                 return true
             }
         }
-        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine1YValue)
-                self.finalY = Double(xLine1)
+        else if(botIntersect >= xLineLeft && botIntersect <= xLineRight){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(botIntersect), lastY: Double(yLineBot)) < Double(desiredLength)){
+                hitBlue = true
+                hitRed = false
+                hitGreen = false
                 return true
             }
         }
-        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine2YValue)
-                self.finalY = Double(xLine2)
-                return true
-            }
-        }
-        return false
-    }
-    func checkGreenCollision()-> Bool {
-        print("CHECKING FOR GREEN COLLISIONS")
-        let yLine1 = CGFloat(-364.0)
-        let xLine1 = CGFloat(1.0)
-        let xLine2 = CGFloat(84.0)
-        let yLine2 = CGFloat(-238.05)
-        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
-        var b = tongue.position.y-(slope*tongue.position.x)
-        var checkYLine1XValue = (yLine1-b)/slope
-        var checkYLine2XValue = (yLine2-b)/slope
-        var checkXLine1YValue = slope*xLine1+b
-        var checkXLine2YValue = slope*xLine2+b
-        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine1XValue)
-                self.finalY = Double(yLine1)
-                print("green 1 yes")
-                return true
-            }
-        }
-        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine2XValue)
-                self.finalY = Double(yLine2)
-                print("green 2 yes")
-                return true
-            }
-        }
-        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine1YValue)
-                self.finalY = Double(xLine1)
-                print("green 3 yes")
-                return true
-            }
-        }
-        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine2YValue)
-                self.finalY = Double(xLine2)
-                return true
-                print("green 4 yes")
-            }
-        }
-        print("GREEN FAILURE: ",finalX,",",finalY)
-        return false
-    }
-    func checkBlueCollision()-> Bool {
-        let yLine1 = CGFloat(392)
-        let xLine1 = CGFloat(218)
-        let xLine2 = CGFloat(320)
-        let yLine2 = CGFloat(493)
-        var slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
-        var b = tongue.position.y-(slope*tongue.position.x)
-        var checkYLine1XValue = (yLine1-b)/slope
-        var checkYLine2XValue = (yLine2-b)/slope
-        var checkXLine1YValue = slope*xLine1+b
-        var checkXLine2YValue = slope*xLine2+b
-        if(checkYLine1XValue <= xLine2 && xLine1 <= checkYLine1XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine1XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine1XValue)
-                self.finalY = Double(yLine1)
-                return true
-            }
-        }
-        else if(checkYLine2XValue <= xLine2 && xLine1 <= checkYLine2XValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: checkYLine2XValue, endY: yLine1)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkYLine2XValue)
-                self.finalY = Double(yLine2)
-                return true
-            }
-        }
-        else if(checkXLine1YValue <= yLine2 && yLine1 <= checkXLine1YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine1YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine1YValue)
-                self.finalY = Double(xLine1)
-                return true
-            }
-        }
-        else if(checkXLine2YValue <= yLine2 && yLine1 <= checkXLine2YValue){
-            if(distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: xLine1, endY: checkXLine2YValue)<=distanceFunction(startX: tongue.position.x, startY: tongue.position.y, endX: CGFloat(finalX), endY: CGFloat(finalY))){
-                self.finalX = Double(checkXLine2YValue)
-                self.finalY = Double(xLine2)
+        else if(topIntersect >= xLineLeft && topIntersect <= xLineRight){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(topIntersect),lastY: Double(yLineTop)) < Double(desiredLength)){
+                hitBlue = true
+                hitRed = false
+                hitGreen = false
                 return true
             }
         }
         return false
     }
-    func distanceFunction(startX: CGFloat, startY: CGFloat, endX: CGFloat, endY: CGFloat) -> CGFloat{
-        return sqrt((endY-startY)*(endY-startY)+(endX-startX)*(endX-startX))
+    func collideRed() ->Bool{
+        print("Yea wtf: ",tongue.zRotation)
+        let xLineLeft = CGFloat(-208.0)
+        let xLineRight = CGFloat(-114.0)
+        let yLineTop = CGFloat(491.0)
+        let yLineBot = CGFloat(393.0)
+        //print(finalX,",",finalY)
+        let slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        let yIntercept = CGFloat(finalY)-(slope*CGFloat(finalX))
+        print("slope: ",slope,"y-intercept",yIntercept)
+        let leftIntersect = slope*xLineLeft+yIntercept
+        let rightIntersect = slope*xLineRight+yIntercept
+        let botIntersect = (yLineBot-yIntercept)/slope
+        let topIntersect = (yLineTop-yIntercept)/slope
+        print("bot intersect: ",botIntersect,",",yLineBot)
+        if(leftIntersect >= yLineBot && leftIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                hitRed = true
+                hitBlue = false
+                hitGreen = false
+                return true
+            }
+        }
+        else if(rightIntersect >= yLineBot && rightIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                hitRed = true
+                hitBlue = false
+                hitGreen = false
+                return true
+            }
+        }
+        else if(botIntersect >= xLineLeft && botIntersect <= xLineRight){
+            print("almost hit the thing")
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(botIntersect), lastY: Double(yLineBot)) <= Double(desiredLength)){
+                print("HIT BOTTOM LINE")
+                hitRed = true
+                hitBlue = false
+                hitGreen = false
+                return true
+            }
+        }
+        else if(topIntersect >= xLineLeft && topIntersect <= xLineRight){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(topIntersect),lastY: Double(yLineTop)) < Double(desiredLength)){
+                hitRed = true
+                hitBlue = false
+                hitGreen = false
+                return true
+            }
+        }
+        return false
     }
+    func collideGreen() ->Bool{
+        let xLineLeft = CGFloat(0.0)
+        let xLineRight = CGFloat(89.0)
+        let yLineTop = CGFloat(370)
+        let yLineBot = CGFloat(273)
+        let slope = (CGFloat(finalY)-tongue.position.y)/(CGFloat(finalX)-tongue.position.x)
+        let yIntercept = CGFloat(finalY)-(slope*CGFloat(finalX))
+        let leftIntersect = slope*xLineLeft+yIntercept
+        let rightIntersect = slope*xLineRight+yIntercept
+        let botIntersect = (yLineBot-yIntercept)/slope
+        let topIntersect = (yLineTop-yIntercept)/slope
+        if(leftIntersect >= yLineBot && leftIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                print("hit left")
+                hitRed = false
+                hitBlue = false
+                hitGreen = true
+                return true
+            }
+        }
+        else if(rightIntersect >= yLineBot && rightIntersect <= yLineTop){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(xLineLeft), lastY: Double(leftIntersect)) < Double(desiredLength)){
+                print("hit right")
+                hitRed = false
+                hitBlue = false
+                hitGreen = true
+                return true
+            }
+        }
+        else if(botIntersect >= xLineLeft && botIntersect <= xLineRight){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(botIntersect), lastY: Double(yLineBot)) < Double(desiredLength)){
+                print("hit bot")
+                hitRed = false
+                hitBlue = false
+                hitGreen = true
+                return true
+            }
+        }
+        else if(topIntersect >= xLineLeft && topIntersect <= xLineRight){
+            if(distance(firstX: Double(tongue.position.x), firstY: Double(tongue.position.y), lastX: Double(topIntersect),lastY: Double(yLineTop)) < Double(desiredLength)){
+                print("hit top")
+                hitRed = false
+                hitBlue = false
+                hitGreen = true
+                return true
+            }
+        }
+        return false
+    }
+    func distance(firstX: Double, firstY: Double, lastX: Double, lastY: Double)-> Double{
+       return sqrt(pow(lastX-firstX,2)+pow(lastY-firstY,2))
+    }
+    
 }
