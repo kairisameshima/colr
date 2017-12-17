@@ -125,6 +125,7 @@ class GameScene: SKScene {
 
             if(touchedNode.name != nil){
                 if touchedNode.name == "dragSpace" && !tongueIsFlying{
+                    print("TOUCH DETECTED")
                     //print("here??")
                     initialLoc = touch.location(in: self)
                     touchedDrag = true
@@ -186,8 +187,8 @@ class GameScene: SKScene {
     }
     override func update(_ currentTime: TimeInterval) {
         changeTongueLength()
-        print("actual length: ",actualLength)
-        print("tongue.size.height: ",tongue.size.height)
+        print(actualLength)
+        print(tongueIsFlying)
         changeSteveColor()
         displayScore()
         respawnFruit()
@@ -254,6 +255,8 @@ class GameScene: SKScene {
             tongue.size.height = actualLength
         }
         else if(actualLength>=desiredLength && !retracting && actualLength>0 ){//reached max length
+            if(changedColor){
+                playSoundWith(fileName: "pop", fileExtension: "mp3")}
             retracting = true
             
         }
@@ -275,12 +278,13 @@ class GameScene: SKScene {
                 head.run(group)
                 open_mouth = false;
             }
-            if(actualLength<=15 && changedColor){
-                playSoundWith(fileName: "bling", fileExtension: "mp3")
-                changedColor = false
-            }
+
         }
         else if(actualLength<=20){
+            if(changedColor){
+            playSoundWith(fileName: "bling", fileExtension: "mp3")
+            changedColor = false
+            }
             if(hitRed){
                 let apple: SKSpriteNode = childNode(withName: "red") as! SKSpriteNode
                 apple.size.width = 0
