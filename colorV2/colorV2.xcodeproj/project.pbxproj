@@ -7,16 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18F970721FE4856E0005CD6C /* TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F970671FE4856C0005CD6C /* TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3 */; };
 		18F970731FE4856E0005CD6C /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F970681FE4856D0005CD6C /* win.mp3 */; };
-		18F970741FE4856E0005CD6C /* button-10.wav in Resources */ = {isa = PBXBuildFile; fileRef = 18F970691FE4856D0005CD6C /* button-10.wav */; };
-		18F970751FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706A1FE4856D0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3 */; };
 		18F970761FE4856E0005CD6C /* shed.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706B1FE4856D0005CD6C /* shed.mp3 */; };
 		18F970771FE4856E0005CD6C /* background.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706C1FE4856D0005CD6C /* background.mp3 */; };
 		18F970781FE4856E0005CD6C /* bling.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706D1FE4856D0005CD6C /* bling.mp3 */; };
-		18F970791FE4856E0005CD6C /* backgroundmusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706E1FE4856E0005CD6C /* backgroundmusic.mp3 */; };
 		18F9707A1FE4856E0005CD6C /* swish.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F9706F1FE4856E0005CD6C /* swish.mp3 */; };
-		18F9707B1FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F970701FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05.mp3 */; };
 		18F9707C1FE4856E0005CD6C /* pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 18F970711FE4856E0005CD6C /* pop.mp3 */; };
 		18F970981FE48A940005CD6C /* colrlevel.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F970971FE48A940005CD6C /* colrlevel.png */; };
 		F813E6561FDE25D9002DD3B1 /* MainMenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F813E6551FDE25D9002DD3B1 /* MainMenuScene.sks */; };
@@ -56,16 +51,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		18F970671FE4856C0005CD6C /* TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3"; sourceTree = "<group>"; };
 		18F970681FE4856D0005CD6C /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
-		18F970691FE4856D0005CD6C /* button-10.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-10.wav"; sourceTree = "<group>"; };
-		18F9706A1FE4856D0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3"; sourceTree = "<group>"; };
 		18F9706B1FE4856D0005CD6C /* shed.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shed.mp3; sourceTree = "<group>"; };
 		18F9706C1FE4856D0005CD6C /* background.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = background.mp3; sourceTree = "<group>"; };
 		18F9706D1FE4856D0005CD6C /* bling.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bling.mp3; sourceTree = "<group>"; };
-		18F9706E1FE4856E0005CD6C /* backgroundmusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundmusic.mp3; sourceTree = "<group>"; };
 		18F9706F1FE4856E0005CD6C /* swish.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swish.mp3; sourceTree = "<group>"; };
-		18F970701FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = little_robot_sound_factory_Jingle_Win_Synth_05.mp3; sourceTree = "<group>"; };
 		18F970711FE4856E0005CD6C /* pop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pop.mp3; sourceTree = "<group>"; };
 		18F970971FE48A940005CD6C /* colrlevel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colrlevel.png; sourceTree = "<group>"; };
 		F813E6551FDE25D9002DD3B1 /* MainMenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenuScene.sks; sourceTree = "<group>"; };
@@ -165,11 +155,6 @@
 				F890F6911FDB43DF006C8B94 /* GameScene.sks */,
 				F890F6951FDB43DF006C8B94 /* GameScene.swift */,
 				F890F6971FDB43DF006C8B94 /* GameViewController.swift */,
-				18F9706E1FE4856E0005CD6C /* backgroundmusic.mp3 */,
-				18F970691FE4856D0005CD6C /* button-10.wav */,
-				18F9706A1FE4856D0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3 */,
-				18F970701FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05.mp3 */,
-				18F970671FE4856C0005CD6C /* TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3 */,
 				F890F6991FDB43DF006C8B94 /* Main.storyboard */,
 				F813E6551FDE25D9002DD3B1 /* MainMenuScene.sks */,
 				F813E6591FDE2B9C002DD3B1 /* MainMenuScene.swift */,
@@ -311,22 +296,17 @@
 				F890F69B1FDB43DF006C8B94 /* Main.storyboard in Resources */,
 				F890F6C61FDB51B8006C8B94 /* MyActions.sks in Resources */,
 				F890F6921FDB43DF006C8B94 /* GameScene.sks in Resources */,
-				18F970721FE4856E0005CD6C /* TheFatRat - Prelude [1 Hour Version] (mp3cut.net).mp3 in Resources */,
 				F813E6561FDE25D9002DD3B1 /* MainMenuScene.sks in Resources */,
 				F890F69D1FDB43DF006C8B94 /* Assets.xcassets in Resources */,
 				F890F6CA1FDB5450006C8B94 /* Tongue.sks in Resources */,
 				F890F6A01FDB43DF006C8B94 /* LaunchScreen.storyboard in Resources */,
 				18F970761FE4856E0005CD6C /* shed.mp3 in Resources */,
-				18F970741FE4856E0005CD6C /* button-10.wav in Resources */,
 				18F970781FE4856E0005CD6C /* bling.mp3 in Resources */,
-				18F9707B1FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05.mp3 in Resources */,
 				18F970731FE4856E0005CD6C /* win.mp3 in Resources */,
 				18F970771FE4856E0005CD6C /* background.mp3 in Resources */,
 				F8EBDADA1FDDCC5B00C3E937 /* Trees.sks in Resources */,
-				18F970751FE4856E0005CD6C /* little_robot_sound_factory_Jingle_Win_Synth_05 (1).mp3 in Resources */,
 				18F9707A1FE4856E0005CD6C /* swish.mp3 in Resources */,
 				18F9707C1FE4856E0005CD6C /* pop.mp3 in Resources */,
-				18F970791FE4856E0005CD6C /* backgroundmusic.mp3 in Resources */,
 				18F970981FE48A940005CD6C /* colrlevel.png in Resources */,
 				F890F6941FDB43DF006C8B94 /* Actions.sks in Resources */,
 			);
