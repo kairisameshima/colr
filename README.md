@@ -10,6 +10,6 @@ Malini:
 Mouth Animation, enabled interval switches, CMYK mode and UI related to intervals and the CMYK modes and stats
 
 Kairi:
-Initial Setup, Main Menu, Background and Fruit Animation, menu text, win messages, artwork and design, debugging and merge fixes
+Initial Setup, Main Menu, Background and Fruit Animation, menu text, win messages, checking win status and update functions, artwork and design, debugging and merge fixes
 
 
