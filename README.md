@@ -5,4 +5,10 @@ work division:
 Daniel:
 Tongue dragging physics, tongue animation, collision detection, fruit displacement animations, sound files and implementation.
 
-Malini: mouth animation, 
+Malini: 
+Mouth Animation, enabled interval switches, CMYK mode and UI related to intervals and the CMYK modes and stats
+
+Kairi:
+Initial Setup, Main Menu, Background and Fruit Animation, Debugging and merge fixes
+
+
